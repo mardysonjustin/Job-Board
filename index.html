@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&family=Karla:ital,wght@0,200..800;1,200..800&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <title>Joblivion</title>
+    
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">Joblivion.</div>
+                <div class="nav-links">
+                    <a href="#" class="nav-link">FIND JOBS</a>
+                    <a href="#" class="nav-link">FIND EMPLOYEES</a>
+                    <a href="#" class="nav-link">REGISTER</a>
+                    <button class="login-btn">LOGIN</button>
+                </div>
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">Looking For A <span>Job?</span></h1>
+                    <p class="hero-subtitle">Do not fear that job application!</p>
+                    <p class="hero-description">Being unemployed is not cool. Sign up now! </p>
+                    
+                    <div class="search-container">
+                        <div class="search-form">
+                            <input type="text" class="search-input" placeholder="I'm Looking for">
+                            <input type="text" class="search-input" placeholder="Which Town or City?">
+                            <button class="search-btn">Search</button>
+                        </div>
+                        <div class="advanced-search">
+                            <a href="#">Advanced Search</a>
+                        </div>
+                    </div>
+
+                    <div class="search-tagline">
+                        Search <span class="highlight1">Every Job, Everywhere</span><br>
+                        with <span class="highlight2">Joblivion</span>.
+                    </div>
+                </div>
+
+                <div class="hero-image">
+                    <img src="assets\images\landingpage.jpg" alt="Professional Team">
+                    <div class="hero-overlay"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="floating-card floating-card-1">
+            <div style="color: #764ba2; font-weight: bold; font-size: 14px;">1000+</div>
+            <div style="color: #666; font-size: 12px;">New Jobs Daily</div>
+        </div>
+        
+        <div class="floating-card floating-card-2">
+            <div style="color: #764ba2; font-weight: bold; font-size: 14px;">Fast Hiring</div>
+            <div style="color: #666; font-size: 12px;">Quick Process</div>
+        </div>
+        
+        <div class="floating-card floating-card-3">
+            <div style="color: #764ba2; font-weight: bold; font-size: 14px;">Remote OK</div>
+            <div style="color: #666; font-size: 12px;">Work from Home</div>
+        </div>
+    </section>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        document.querySelectorAll('.search-input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.style.transform = 'translateY(-2px)';
+            });
+            
+            input.addEventListener('blur', () => {
+                input.style.transform = 'translateY(0)';
+            });
+        });
+
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.floating-card').forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
