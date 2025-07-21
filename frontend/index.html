@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Resume Matcher</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-white min-h-screen font-sans flex items-center justify-center p-4">
+
+  <div class="bg-white shadow-2xl rounded-xl p-8 max-w-xl w-full space-y-6 border border-green-100">
+    <!-- Header -->
+    <div class="text-center">
+      <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-green-100 text-green-600 mb-3">
+        <!-- Heroicon: Document -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m2 0a2 2 0 100-4 2 2 0 000 4zM3 8a2 2 0 012-2h4l2-2h6a2 2 0 012 2v12a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" />
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-gray-800">Resume D-AI-zon</h1>
+      <p class="text-gray-500 mt-2">Match resumes to job descriptions using AI.</p>
+    </div>
+
+    <!-- form -->
+    <form id="match-form" enctype="multipart/form-data" class="space-y-5">
+      <!-- resume upload -->
+      <div>
+        <label class="block font-medium text-gray-700 mb-1">Upload Resume</label>
+        <input type="file" name="resume" accept=".pdf,.doc,.docx" required
+               class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"/>
+      </div>
+
+      <!-- job desc -->
+      <div>
+        <label class="block font-medium text-gray-700 mb-1">Job Description</label>
+        <textarea name="job_description" rows="6" required
+                  placeholder="Paste job description here..."
+                  class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500"></textarea>
+      </div>
+
+      <!-- submit button -->
+      <button type="submit"
+              class="w-full bg-green-600 text-white py-2 rounded-md font-semibold hover:bg-green-700 transition">
+        Get Match Score
+      </button>
+
+      <div id="message-area" class="text-sm mt-4 text-center text-gray-700 space-y-2"></div>
+    </form>
+
+    <div id="score-bar" class="hidden mt-4">
+      <label class="block font-medium text-gray-700 mb-1">Match Score</label>
+      <div class="w-full bg-gray-200 rounded-full h-4">
+        <div id="score-fill" class="bg-green-500 h-4 rounded-full transition-all" style="width: 0%;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  const form = document.getElementById('match-form');
+  const messageArea = document.getElementById('message-area');
+  const scoreBar = document.getElementById('score-bar');
+  const scoreFill = document.getElementById('score-fill');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    // Reset message and score bar
+    messageArea.innerHTML = `
+      <div class="text-gray-500 italic animate-pulse">Submitting...</div>
+    `;
+    scoreBar.classList.add('hidden');
+    scoreFill.style.width = '0%';
+
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('http://localhost:3000/match', {
+        method: 'POST',
+        body: formData,
+        mode: 'cors'
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Show match score
+        messageArea.innerHTML = `
+          <div class="text-green-700 font-semibold">✔️ Resume scored successfully!</div>
+          <p class="font-semibold text-gray-800">Match Score: ${result.score}%</p>
+          <p class="text-green-700"><strong>Matched:</strong> ${result.matched_skills.join(', ')}</p>
+          <p class="text-red-600"><strong>Missing:</strong> ${result.missing_skills.join(', ')}</p>
+        `;
+
+        scoreBar.classList.remove('hidden');
+        scoreFill.style.width = result.score + '%';
+
+      } else {
+        messageArea.innerHTML = `
+          <div class="text-red-600 font-medium">❌ ${result.error || 'Something went wrong. Try again.'}</div>
+        `;
+      }
+
+    } catch (err) {
+      messageArea.innerHTML = `
+        <div class="text-red-600 font-medium">❌ Error: ${err.message}</div>
+        <p class="text-gray-500 text-sm">Check if the server is running at <code>localhost:3000</code></p>
+      `;
+      console.error('Frontend fetch error:', err);
+    }
+  });
+</script>
+
+</body>
+</html>
