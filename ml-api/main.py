@@ -40,20 +40,28 @@ async def match_resume(resume: UploadFile, job_description: str = Form(...)):
     try:
         resume_text = extract_text_from_pdf(resume)
 
-        #computations
-        # sentence embeddings
+        # compute sentence embeddings
         emb_resume = model.encode(resume_text, convert_to_tensor=True)
         emb_job = model.encode(job_description, convert_to_tensor=True)
 
-        # cosine similarity
+        # compute cosine similarity
         similarity = util.cos_sim(emb_resume, emb_job).item()
         score = round(similarity * 100)
 
+        skills = ['Python', 'JavaScript', 'React', 'Node.js', 'Django', 'SQL', 'HTML', 'CSS', 'FastAPI']
+
+        resume_lower = resume_text.lower()
+        job_desc_lower = job_description.lower()
+
+        matched_skills = [skill for skill in skills if skill.lower() in resume_lower and skill.lower() in job_desc_lower]
+        missing_skills = [skill for skill in skills if skill.lower() in job_desc_lower and skill not in matched_skills]
+
         return {
             "score": score,
-            "matched_skills": [],  # for extraction of keyword overlaps
-            "missing_skills": []
+            "matched_skills": matched_skills,
+            "missing_skills": missing_skills
         }
 
     except Exception as e:
         return {"error": str(e)}
+
